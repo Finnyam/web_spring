@@ -17,7 +17,8 @@
 	<div class="content">
 		<section class="board">
 			<h1 class="title">관리자 - 공지사항</h1>
-			<form name="deleteForm" action="#" method="get">
+			<form name="deleteForm" action="admin_notice_delete_proc.do" method="post">
+			<input type="hidden" name="nid" value="${nid }">
 				<table border=1>
 					<tr>
 						<td><img src="http://localhost:9000/mycgv_jsp/images/trash.jpg"></td>
@@ -27,10 +28,10 @@
 					</tr>				
 					<tr>
 						<td colspan="2">
-							<button type="button">삭제완료</button>
-							<a href="admin_notice_content.jsp">
+							<button type="submit">삭제완료</button>
+							<a href="admin_notice_content.do?nid=${nid }">
 								<button type="button">이전페이지</button></a>
-							<a href="admin_notice_list.jsp">
+							<a href="admin_notice_list.do">
 								<button type="button">리스트</button></a>							
 						</td>				
 					</tr>
