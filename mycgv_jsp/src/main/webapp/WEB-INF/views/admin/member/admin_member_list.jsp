@@ -1,30 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import = "com.mycgv_jsp.dao.MemberDao" %>    
-<%@ page import = "com.mycgv_jsp.vo.MemberVo" %>    
-<%@ page import = "java.util.ArrayList" %>
-
-<%
-	String sid = (String)session.getAttribute("sid");
-	if(sid == null){
-		out.write("<script>");
-		out.write("alert('정상적인 접근방식이 아닙니다. 로그인을 진행해주세요.');");
-		out.write("location.href='http://localhost:9000/mycgv_jsp/login/login.jsp';");
-		out.write("</script>");
-	}else{
-		
-	if(!sid.equals("admin")){
-		out.write("<script>");
-		out.write("alert('관리자 접근 권한이 필요합니다. 다시 로그인을 진행해주세요.');");
-		out.write("location.href='http://localhost:9000/mycgv_jsp/login/login.jsp';");
-		out.write("</script>");
-	}else{
-
-	MemberDao memberDao = new MemberDao();
-	ArrayList<MemberVo> list = memberDao.select(); 
-%>   
-    
-    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,15 +26,15 @@
 					<th>가입일자</th>
 					<th>회원등급</th>
 				</tr>
-				<% for(MemberVo memberVo : list){ %>
+				<c:forEach var="memberVo" items="${list}">
 				<tr>
-					<td><%= memberVo.getRno() %></td>
-					<td><%= memberVo.getId() %></td>
-					<td><%= memberVo.getName() %></td>
-					<td><%= memberVo.getMdate() %></td>
-					<td><%= memberVo.getGrade() %></td>
+					<td>${memberVo.rno }</td>
+					<td>${memberVo.id }</td>
+					<td>${memberVo.name }</td>
+					<td>${memberVo.mdate }</td>
+					<td>${memberVo.grade }</td>
 				</tr>	
-				<% } %>	
+				</c:forEach>
 				<tr>
 					<td colspan="5"><< 1  2  3  4  5 >></td>
 				</tr>
@@ -72,11 +48,6 @@
 	<jsp:include page="../../footer.jsp"></jsp:include>
 </body>
 </html>
-
-<%
-		}//admin check
-	}//sid null check
-%>
 
 
 

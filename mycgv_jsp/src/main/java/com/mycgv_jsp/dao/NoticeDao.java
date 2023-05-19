@@ -6,6 +6,21 @@ import com.mycgv_jsp.vo.NoticeVo;
 
 public class NoticeDao extends DBConn {
 	/**
+	 * updateHits - 공지사항 조회수 업데이트 
+	 */
+	public void updateHits(String nid) {
+		String sql = "update mycgv_notice set nhits = nhits+1 where nid=?";
+		getPreparedStatement(sql);
+		
+		try {
+			pstmt.setString(1, nid);
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	/**
 	 * delete - 공지사항 삭제
 	 */
 	public int delete(String nid) {

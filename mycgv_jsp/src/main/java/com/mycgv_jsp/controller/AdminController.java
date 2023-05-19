@@ -7,11 +7,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mycgv_jsp.dao.MemberDao;
 import com.mycgv_jsp.dao.NoticeDao;
+import com.mycgv_jsp.vo.MemberVo;
 import com.mycgv_jsp.vo.NoticeVo;
 
 @Controller
 public class AdminController {
+	/**
+	 * admin_member_list.do - 회원 전체 리스트
+	 */
+	@RequestMapping(value="/admin_member_list.do", method=RequestMethod.GET)
+	public ModelAndView admin_member_list() {
+		ModelAndView model = new ModelAndView();
+		MemberDao memberDao = new MemberDao();
+		ArrayList<MemberVo> list = memberDao.select();
+		model.addObject("list", list);
+		model.setViewName("/admin/member/admin_member_list");
+		return model;
+	}
 	/**
 	 * admin_notice_delete_proc.do - 공지사항 삭제 처리
 	 */
