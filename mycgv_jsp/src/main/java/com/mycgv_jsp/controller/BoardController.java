@@ -124,23 +124,55 @@ public class BoardController {
 	}
 	
 	
-	/**
-	 * board_list.do - 게시글 전체 리스트 
-	 * @return
-	 */
-	@RequestMapping(value="/board_list.do", method=RequestMethod.GET)
-	public ModelAndView board_list() {
-		ModelAndView model = new ModelAndView();
+	
+		/**
+		 * board_list.do - 게시글 전체 리스트 
+		 * @return
+		 */
+		@RequestMapping(value="/board_list.do", method=RequestMethod.GET)
+		public ModelAndView board_list(String page) {
+			ModelAndView model = new ModelAndView();		
+			BoardDao boardDao = new BoardDao();
+			
+			//페이징 처리 - startCount, endCount 구하기
+			int startCount = 0;
+			int endCount = 0;
+			int pageSize = 5;	//한페이지당 게시물 수
+			int reqPage = 1;	//요청페이지	
+			int pageCount = 1;	//전체 페이지 수
+			int dbCount = boardDao.totalRowCount();	//DB에서 가져온 전체 행수
+			
+			//총 페이지 수 계산
+			if(dbCount % pageSize == 0){
+				pageCount = dbCount/pageSize;
+			}else{
+				pageCount = dbCount/pageSize+1;
+			}
+
+			//요청 페이지 계산
+			if(page != null){
+				reqPage = Integer.parseInt(page);
+				startCount = (reqPage-1) * pageSize+1; 
+				endCount = reqPage *pageSize;
+			}else{
+				startCount = 1;
+				endCount = 5;
+			}
+			
+			ArrayList<BoardVo> list = boardDao.select(startCount, endCount);
 		
-		//DB연동 후 ArrayList<BoardVo>
-		BoardDao boardDao = new BoardDao();
-		ArrayList<BoardVo> list = boardDao.select();
+			model.addObject("list", list);
+			model.addObject("dbCount", dbCount);
+			model.addObject("pageSize", pageSize);
+			model.addObject("pageCount", pageCount);
+			model.addObject("page", reqPage);
+			
+			model.setViewName("/board/board_list");
+			
+			return model;
 		
-		model.addObject("list", list);
-		model.setViewName("/board/board_list");
+		}
 		
-		return model;
-	}
 }
 
 

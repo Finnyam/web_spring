@@ -8,6 +8,10 @@
 <meta charset="UTF-8">
 <title>MYCGV</title>
 <link rel="stylesheet" href="http://localhost:9000/mycgv_jsp/css/mycgv_jsp.css">
+<link rel="stylesheet" href="http://localhost:9000/mycgv_jsp/css/am-pagination.css">
+<script src="http://localhost:9000/mycgv_jsp/js/jquery-3.6.4.min.js"></script>
+<script src="http://localhost:9000/mycgv_jsp/js/mycgv_jsp_jquery.js"></script>
+<script src="http://localhost:9000/mycgv_jsp/js/am-pagination.js"></script>
 </head>
 <body>
 	<!-- header -->
@@ -44,7 +48,8 @@
 				</tr>
 				</c:forEach>
 				<tr>
-					<td colspan="5"><< 1  2  3  4  5 >></td>
+					<!-- <td colspan="5"><< 1  2  3  4  5 >></td> -->
+					<td colspan="5"><div id="ampaginationsm"></div></td>
 				</tr>
 			</table>
 		</section>
