@@ -25,6 +25,7 @@ public class BoardDao extends DBConn{
 			
 			return count;		
 		}	
+	
 	/**
 	 * updateHits - 조회수 증가
 	 */

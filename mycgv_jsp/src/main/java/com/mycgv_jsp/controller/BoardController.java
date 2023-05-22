@@ -127,7 +127,6 @@ public class BoardController {
 	
 		/**
 		 * board_list.do - 게시글 전체 리스트 
-		 * @return
 		 */
 		@RequestMapping(value="/board_list.do", method=RequestMethod.GET)
 		public ModelAndView board_list(String page) {
@@ -137,7 +136,7 @@ public class BoardController {
 			//페이징 처리 - startCount, endCount 구하기
 			int startCount = 0;
 			int endCount = 0;
-			int pageSize = 5;	//한페이지당 게시물 수
+			int pageSize = 10;	//한페이지당 게시물 수
 			int reqPage = 1;	//요청페이지	
 			int pageCount = 1;	//전체 페이지 수
 			int dbCount = boardDao.totalRowCount();	//DB에서 가져온 전체 행수
@@ -156,15 +155,15 @@ public class BoardController {
 				endCount = reqPage *pageSize;
 			}else{
 				startCount = 1;
-				endCount = 5;
+				endCount = pageSize;
 			}
 			
 			ArrayList<BoardVo> list = boardDao.select(startCount, endCount);
 		
 			model.addObject("list", list);
-			model.addObject("dbCount", dbCount);
+			model.addObject("totals", dbCount);
 			model.addObject("pageSize", pageSize);
-			model.addObject("pageCount", pageCount);
+			model.addObject("maxSize", pageCount);
 			model.addObject("page", reqPage);
 			
 			model.setViewName("/board/board_list");

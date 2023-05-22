@@ -6,6 +6,27 @@ import com.mycgv_jsp.vo.NoticeVo;
 
 public class NoticeDao extends DBConn {
 	/**
+	 *  전체 로우 카운트 - 페이징 처리
+	 */
+	public int totalRowCount() {
+			int count = 0;
+			String sql = "select count(*) from mycgv_notice";
+			getPreparedStatement(sql);
+			
+			try {
+				rs = pstmt.executeQuery();
+				while(rs.next()) {				
+					count = rs.getInt(1);
+				}			
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return count;		
+		}	
+	
+	/**
 	 * updateHits - 공지사항 조회수 업데이트 
 	 */
 	public void updateHits(String nid) {
@@ -82,6 +103,39 @@ public class NoticeDao extends DBConn {
 			e.printStackTrace();
 		}
 		return noticeVo;
+	}
+	
+	/**
+	 * select - 공지사항 전체 리스트(페이징 처리)
+	 */
+	public ArrayList<NoticeVo> select(int startCount, int endCount){
+		ArrayList<NoticeVo> list = new ArrayList<NoticeVo>();
+		String sql =" SELECT RNO,NID,NTITLE,NHITS,NDATE " + 
+				" FROM(SELECT ROWNUM RNO,NID,NTITLE,NHITS,TO_CHAR(NDATE,'YYYY-MM-DD') NDATE " + 
+				"		FROM (SELECT NID,NTITLE,NHITS,NDATE FROM MYCGV_NOTICE " + 
+				"				ORDER BY NDATE DESC))" + 
+				" WHERE RNO BETWEEN ? AND ?";
+		getPreparedStatement(sql);
+		
+		try {
+			pstmt.setInt(1, startCount);
+			pstmt.setInt(2, endCount);
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				NoticeVo noticeVo = new NoticeVo();
+				noticeVo.setRno(rs.getInt(1));
+				noticeVo.setNid(rs.getString(2));
+				noticeVo.setNtitle(rs.getString(3));
+				noticeVo.setNhits(rs.getInt(4));
+				noticeVo.setNdate(rs.getString(5));
+				
+				list.add(noticeVo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 	
 	/**

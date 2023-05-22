@@ -6,12 +6,67 @@ import com.mycgv_jsp.vo.MemberVo;
 
 public class MemberDao extends DBConn{
 	/**
+	 *  전체 로우 카운트 - 페이징 처리
+	 */
+	public int totalRowCount() {
+			int count = 0;
+			String sql = "select count(*) from mycgv_member";
+			getPreparedStatement(sql);
+			
+			try {
+				rs = pstmt.executeQuery();
+				while(rs.next()) {				
+					count = rs.getInt(1);
+				}			
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return count;		
+		}
+	
+	/**
+	 * select - 회원리스트: 페이징
+	 */
+	public ArrayList<MemberVo> select(int startCount, int endCount) {
+		ArrayList<MemberVo> list = new ArrayList<MemberVo>();
+		String sql = "SELECT RNO,ID,NAME,MDATE,GRADE "
+				+ " FROM (select rownum rno, id, name, to_char(mdate,'yyyy-mm-dd') mdate, grade " + 
+				" from (select id, name, mdate, grade from mycgv_member " + 
+				"        order by mdate desc))"
+				+ " WHERE RNO BETWEEN ? AND ? ";
+		getPreparedStatement(sql);
+		
+		try {		
+			pstmt.setInt(1, startCount);
+			pstmt.setInt(2, endCount);
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				MemberVo memberVo = new MemberVo();
+				memberVo.setRno(rs.getInt(1));
+				memberVo.setId(rs.getString(2));
+				memberVo.setName(rs.getString(3));
+				memberVo.setMdate(rs.getString(4));
+				memberVo.setGrade(rs.getString(5));
+				list.add(memberVo);   //콘솔창에러X, 화면출력X
+			}			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	/**
 	 * select - 회원리스트
 	 */
 	public ArrayList<MemberVo> select() {
 		ArrayList<MemberVo> list = new ArrayList<MemberVo>();
-		String sql = "select rownum rno, id, name, to_char(mdate,'yyyy-mm-dd') mdate, grade\r\n" + 
-				" from (select id, name, mdate, grade from mycgv_member\r\n" + 
+		String sql = "select rownum rno, id, name, to_char(mdate,'yyyy-mm-dd') mdate, grade " + 
+				" from (select id, name, mdate, grade from mycgv_member " + 
 				"        order by mdate desc)";
 		getPreparedStatement(sql);
 		
