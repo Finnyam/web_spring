@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mycgv_jsp.dao.BoardDao;
@@ -175,13 +176,18 @@ public class BoardController {
 			return model;
 		
 		}
+		//header 게시판(JSON) 호출되는 주소
+		@RequestMapping(value="/board_list_json.do", method=RequestMethod.GET)
+		public String board_list_json() {
+		 return "/board/board_list_json";
+		}
 		
 		/**
-		 * board_list_json.do - 게시글 전체 리스트 (json)
+		 * board_list_json.do - ajax에서 호출되는 게시글 전체 리스트 (JSON)
 		 */
-		@RequestMapping(value="/board_list_json.do", method=RequestMethod.GET)
+		@RequestMapping(value="/board_list_json_data.do", method=RequestMethod.GET,produces="text/plain;charset=UTF-8")
 		@ResponseBody
-		public String board_list_json(String page) {
+		public String board_list_json_data(String page) {
 			BoardDao boardDao = new BoardDao();
 			
 			//페이징 처리 - startCount, endCount 구하기
@@ -227,16 +233,10 @@ public class BoardController {
 				
 			}
 			jlist.add("jlist", jarray);
-			
-			/*{list:[{rno:1, bititle"게시글", id:"hong", bhits:100, bdate:"2023-05-21"},
-				   {rno:2, bititle"게시글", id:"hong", bhits:100, bdate:"2023-05-21"),
-			       {rno:3, bititle"게시글", id:"hong", bhits:100, bdate:"2023-05-21"),
-				   {rno:4, bititle"게시글", id:"hong", bhits:100, bdate:"2023-05-21"),
-				   {rno:5, bititle"게시글", id:"hong", bhits:100, bdate:"2023-05-21"),
-			       ]
-			}*/
-		    
-		    
+			jlist.addProperty("totals", dbCount);
+			jlist.addProperty("pageSize", pageSize);
+			jlist.addProperty("maxSize", pageCount);
+			jlist.addProperty("page", reqPage);
 		    
 		    
 //			model.addObject("list", list);
@@ -247,7 +247,7 @@ public class BoardController {
 //			
 //			model.setViewName("/board/board_list");
 			
-			return model;
+			return new Gson().toJson(jlist);
 		
 		}
 }
