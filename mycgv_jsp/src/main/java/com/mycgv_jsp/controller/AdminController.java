@@ -2,26 +2,30 @@ package com.mycgv_jsp.controller;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mycgv_jsp.dao.NoticeDao;
+import com.mycgv_jsp.service.MemberService;
 import com.mycgv_jsp.service.MemberServiceImpl;
 import com.mycgv_jsp.vo.MemberVo;
 import com.mycgv_jsp.vo.NoticeVo;
 
 @Controller
 public class AdminController {
+	
+	@Autowired
+	private MemberService memberService;
+	
 	/**
 	 * admin_member_list.do - 회원 전체 리스트
 	 */
 	@RequestMapping(value="/admin_member_list.do", method=RequestMethod.GET)
 	public ModelAndView admin_member_list(String page) {
 		ModelAndView model = new ModelAndView();
-		//MemberDao memberDao = new MemberDao();
-		MemberServiceImpl memberService = new MemberServiceImpl();
 		
 		//페이징 처리 - startCount, endCount 구하기
 				int startCount = 0;
