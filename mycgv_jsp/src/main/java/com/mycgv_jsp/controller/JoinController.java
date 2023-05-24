@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mycgv_jsp.dao.MemberDao;
+import com.mycgv_jsp.service.MemberServiceImpl;
 import com.mycgv_jsp.vo.MemberVo;
 
 @Controller
@@ -17,10 +18,8 @@ public class JoinController {
 	@RequestMapping(value="/id_check.do", method=RequestMethod.GET)
 	@ResponseBody
 	public String id_check(String id) {
-		MemberDao memberDao = new MemberDao();
-		int result = memberDao.idCheck(id);	
-		
-		return String.valueOf(result);
+		MemberServiceImpl memberService = new MemberServiceImpl();
+		return memberService.getIdCheckResult(id);
 	}
 	
 	
@@ -31,8 +30,12 @@ public class JoinController {
 	public ModelAndView join_proc(MemberVo memberVo) {
 		ModelAndView model = new ModelAndView();
 		
-		MemberDao memberDao = new MemberDao();
-		int result = memberDao.insert(memberVo);
+		/*
+		 * MemberDao memberDao = new MemberDao(); int result =
+		 * memberDao.insert(memberVo);
+		 */
+		MemberServiceImpl memberService = new MemberServiceImpl();
+		int result = memberService.getJoinResult(memberVo);
 		if(result == 1) {
 			model.addObject("join_result", "ok");
 			model.setViewName("/login/login");
