@@ -2,25 +2,30 @@ package com.mycgv_jsp.controller;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mycgv_jsp.dao.MemberDao;
 import com.mycgv_jsp.dao.NoticeDao;
+import com.mycgv_jsp.service.MemberService;
+import com.mycgv_jsp.service.MemberServiceImpl;
 import com.mycgv_jsp.vo.MemberVo;
 import com.mycgv_jsp.vo.NoticeVo;
 
 @Controller
 public class AdminController {
+	
+	@Autowired
+	private MemberService memberService;
+	
 	/**
 	 * admin_member_list.do - 회원 전체 리스트
 	 */
 	@RequestMapping(value="/admin_member_list.do", method=RequestMethod.GET)
 	public ModelAndView admin_member_list(String page) {
 		ModelAndView model = new ModelAndView();
-		MemberDao memberDao = new MemberDao();
 		
 		//페이징 처리 - startCount, endCount 구하기
 				int startCount = 0;
@@ -28,7 +33,7 @@ public class AdminController {
 				int pageSize = 5;	//한페이지당 게시물 수
 				int reqPage = 1;	//요청페이지	
 				int pageCount = 1;	//전체 페이지 수
-				int dbCount = memberDao.totalRowCount();	//DB에서 가져온 전체 행수
+				int dbCount = memberService.getTotalRowCount();	//DB에서 가져온 전체 행수
 				
 				//총 페이지 수 계산
 				if(dbCount % pageSize == 0){
@@ -47,7 +52,7 @@ public class AdminController {
 					endCount = pageSize;
 				}
 		
-		ArrayList<MemberVo> list = memberDao.select(startCount, endCount);
+		ArrayList<MemberVo> list =memberService.getList(startCount, endCount);
 		
 		model.addObject("list", list);
 		model.addObject("totals", dbCount);
