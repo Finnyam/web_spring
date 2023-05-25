@@ -2,26 +2,31 @@ package com.mycgv_jsp.controller;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mycgv_jsp.dao.NoticeDao;
+import com.mycgv_jsp.service.NoticeService;
 import com.mycgv_jsp.vo.NoticeVo;
 
 @Controller
 public class NoticeController {
+	
+	@Autowired
+	private NoticeService noticeService;
+	
 	/**
 	 * notice_content.do - 사용자 공지사항 상세보기
 	 */
 	@RequestMapping(value = "/notice_content.do", method = RequestMethod.GET)
 	public ModelAndView notice_content(String nid) {
 		ModelAndView model = new ModelAndView();
-		NoticeDao noticeDao = new NoticeDao();
-		NoticeVo noticeVo = noticeDao.select(nid);
+		NoticeVo noticeVo = noticeService.getSelect(nid);
 		if(noticeVo != null) {
-			noticeDao.updateHits(nid);
+			noticeService.getUpdateHits(nid);
 		}
 
 		model.addObject("noticeVo", noticeVo);
@@ -35,7 +40,6 @@ public class NoticeController {
 	@RequestMapping(value = "/notice_list.do", method = RequestMethod.GET)
 	public ModelAndView notice_list(String page) {
 		ModelAndView model = new ModelAndView();
-		NoticeDao noticeDao = new NoticeDao();
 		
 		//페이징 처리 - startCount, endCount 구하기
 		int startCount = 0;
@@ -43,7 +47,7 @@ public class NoticeController {
 		int pageSize = 5;	//한페이지당 게시물 수
 		int reqPage = 1;	//요청페이지	
 		int pageCount = 1;	//전체 페이지 수
-		int dbCount = noticeDao.totalRowCount();	//DB에서 가져온 전체 행수
+		int dbCount = noticeService.getTotalRowCount();	//DB에서 가져온 전체 행수
 		
 		//총 페이지 수 계산
 		if(dbCount % pageSize == 0){
@@ -62,7 +66,7 @@ public class NoticeController {
 			endCount = pageSize;
 		}
 		
-		ArrayList<NoticeVo> list = noticeDao.select(startCount, endCount);
+		ArrayList<NoticeVo> list = noticeService.getSelect(startCount, endCount);
 
 		model.addObject("list", list);
 		model.addObject("totals", dbCount);

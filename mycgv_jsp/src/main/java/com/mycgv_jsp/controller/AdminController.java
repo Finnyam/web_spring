@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.mycgv_jsp.dao.NoticeDao;
 import com.mycgv_jsp.service.MemberService;
 import com.mycgv_jsp.service.MemberServiceImpl;
+import com.mycgv_jsp.service.NoticeService;
 import com.mycgv_jsp.vo.MemberVo;
 import com.mycgv_jsp.vo.NoticeVo;
 
@@ -19,6 +20,8 @@ public class AdminController {
 	
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private NoticeService noticeService;
 	
 	/**
 	 * admin_member_list.do - 회원 전체 리스트
@@ -70,8 +73,7 @@ public class AdminController {
 	@RequestMapping(value="/admin_notice_delete_proc.do", method=RequestMethod.POST)
 	public ModelAndView admin_notice_delete_proc(String nid) {
 		ModelAndView model = new ModelAndView();
-		NoticeDao noticeDao = new NoticeDao();
-		int result = noticeDao.delete(nid);
+		int result = noticeService.getDelete(nid);
 		
 		if(result == 1) {
 			model.setViewName("redirect:/admin_notice_list.do");
@@ -96,8 +98,7 @@ public class AdminController {
 	@RequestMapping(value="/admin_notice_update_proc.do", method=RequestMethod.POST)
 	public ModelAndView admin_notice_update_proc(NoticeVo noticeVo) {
 		ModelAndView model = new ModelAndView();
-		NoticeDao noticeDao = new NoticeDao();
-		int result = noticeDao.update(noticeVo);
+		int result = noticeService.getUpdate(noticeVo);
 		
 		if(result == 1) {
 			model.setViewName("redirect:/admin_notice_list.do");
@@ -110,8 +111,7 @@ public class AdminController {
 	@RequestMapping(value="/admin_notice_update.do", method=RequestMethod.GET)
 	public ModelAndView admin_notice_update(String nid) {
 		ModelAndView model = new ModelAndView();
-		NoticeDao noticeDao = new NoticeDao();
-		NoticeVo noticeVo = noticeDao.select(nid);
+		NoticeVo noticeVo = noticeService.getSelect(nid);
 		
 		model.addObject("noticeVo", noticeVo);
 		model.setViewName("/admin/notice/admin_notice_update");
@@ -123,8 +123,7 @@ public class AdminController {
 	@RequestMapping(value="/admin_notice_content.do", method=RequestMethod.GET)
 	public ModelAndView admin_notice_content(String nid) {
 		ModelAndView model = new ModelAndView();
-		NoticeDao noticeDao = new NoticeDao();
-		NoticeVo noticeVo = noticeDao.select(nid);
+		NoticeVo noticeVo = noticeService.getSelect(nid);
 		
 		model.addObject("noticeVo", noticeVo);
 		model.setViewName("/admin/notice/admin_notice_content");
@@ -158,14 +157,13 @@ public class AdminController {
 	@RequestMapping(value="/admin_notice_list.do", method=RequestMethod.GET)
 	public ModelAndView admin_notice_list(String page) {
 		ModelAndView model = new ModelAndView();
-		NoticeDao noticeDao = new NoticeDao();
 		//페이징 처리 - startCount, endCount 구하기
 				int startCount = 0;
 				int endCount = 0;
 				int pageSize = 5;	//한페이지당 게시물 수
 				int reqPage = 1;	//요청페이지	
 				int pageCount = 1;	//전체 페이지 수
-				int dbCount = noticeDao.totalRowCount();	//DB에서 가져온 전체 행수
+				int dbCount = noticeService.getTotalRowCount();	//DB에서 가져온 전체 행수
 				
 				//총 페이지 수 계산
 				if(dbCount % pageSize == 0){
@@ -184,7 +182,7 @@ public class AdminController {
 					endCount = pageSize;
 				}
 				
-				ArrayList<NoticeVo> list = noticeDao.select(startCount, endCount);
+				ArrayList<NoticeVo> list = noticeService.getSelect(startCount, endCount);
 
 				model.addObject("list", list);
 				model.addObject("totals", dbCount);
