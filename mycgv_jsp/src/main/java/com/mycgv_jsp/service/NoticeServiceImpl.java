@@ -18,23 +18,23 @@ public class NoticeServiceImpl implements NoticeService{
 		return noticeDao.select(startCount, endCount);
 	}
 	@Override
-	public NoticeVo getSelect(String nid) {
-		return noticeDao.select(nid);
+	public NoticeVo getSelect(String bid) {
+		return noticeDao.select(bid);
 	}
 	@Override
 	 public int getUpdate(NoticeVo noticeVo) {
 		return noticeDao.update(noticeVo);
 	}
 	@Override
-	 public int getDelete(String nid) {
-		return noticeDao.delete(nid);
+	 public int getDelete(String bid) {
+		return noticeDao.delete(bid);
 	}
 	@Override
 	 public int getTotalRowCount() {
 		return noticeDao.totalRowCount();
 	}
 	@Override
-	 public void getUpdateHits(String nid) {
-		noticeDao.updateHits(nid);
+	 public void getUpdateHits(String bid) {
+		noticeDao.updateHits(bid);
 	}
 }
