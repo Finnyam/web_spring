@@ -2,6 +2,9 @@ package com.mycgv_jsp.controller;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -92,8 +95,31 @@ public class BoardController {
 	 * board_write_proc.do - 게시글 글쓰기 처리
 	 */
 	@RequestMapping(value="/board_write_proc.do", method=RequestMethod.POST)
-	public String board_write_proc(BoardVo boardVo) {
+	public String board_write_proc(BoardVo boardVo, HttpServletRequest request) 
+	                                     throws Exception{
 		String viewName = "";
+		
+		//bfile, bsfile 파일명 생성
+		if(boardVo.getFile1().getOriginalFilename() != null
+				&& !boardVo.getFile1().getOriginalFilename().equals("")) { //파일이 존재하면
+			//파일의 저장위치
+			String root_path = request.getSession().getServletContext().getRealPath("/");
+			String attach_path = "\\resources\\upload\\";
+			
+			//BSFILE 파일 중복 처리
+			UUID uuid = UUID.randomUUID();
+			String bfile =  boardVo.getFile1().getOriginalFilename();
+			String bsfile = uuid + "_" + bfile; 
+			
+			System.out.println(root_path + attach_path);
+			System.out.println("bfile-->"+ bfile);
+			System.out.println("bsfile-->"+ bsfile);
+		}else {
+			System.out.println("파일 없음");
+		}
+		
+		
+		
 		int result = boardService.getInsert(boardVo);
 		if(result == 1){
 			//response.sendRedirect("http://localhost:9000/mycgv_jsp/board/board_list.jsp");
