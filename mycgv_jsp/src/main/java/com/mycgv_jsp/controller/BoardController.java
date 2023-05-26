@@ -1,5 +1,6 @@
 package com.mycgv_jsp.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
@@ -99,13 +100,13 @@ public class BoardController {
 	                                     throws Exception{
 		String viewName = "";
 		
+		//파일의 저장위치
+		String root_path = request.getSession().getServletContext().getRealPath("/");
+		String attach_path = "\\resources\\upload\\";
+		
 		//bfile, bsfile 파일명 생성
 		if(boardVo.getFile1().getOriginalFilename() != null
 				&& !boardVo.getFile1().getOriginalFilename().equals("")) { //파일이 존재하면
-			//파일의 저장위치
-			String root_path = request.getSession().getServletContext().getRealPath("/");
-			String attach_path = "\\resources\\upload\\";
-			
 			//BSFILE 파일 중복 처리
 			UUID uuid = UUID.randomUUID();
 			String bfile =  boardVo.getFile1().getOriginalFilename();
@@ -114,6 +115,9 @@ public class BoardController {
 			System.out.println(root_path + attach_path);
 			System.out.println("bfile-->"+ bfile);
 			System.out.println("bsfile-->"+ bsfile);
+			
+			boardVo.setBfile(bfile);
+			boardVo.setBsfile(bsfile);
 		}else {
 			System.out.println("파일 없음");
 		}
@@ -124,6 +128,11 @@ public class BoardController {
 		if(result == 1){
 			//response.sendRedirect("http://localhost:9000/mycgv_jsp/board/board_list.jsp");
 //			viewName = "/board/board_list";
+			
+			//파일이 존재하면 서버에 저장
+			File saveFile = new File(root_path + attach_path+boardVo.getBsfile());
+			boardVo.getFile1().transferTo(saveFile);
+			
 			viewName = "redirect:/board_list.do";
 		}else {
 			//에러 페이지 호출
