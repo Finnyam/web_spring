@@ -91,7 +91,7 @@ public class BoardDao extends DBConn{
 	 */
 	public BoardVo select(String bid){
 		BoardVo boardVo = new BoardVo();
-		String sql = "SELECT BID, BTITLE, BCONTENT, BHITS, ID, BDATE FROM MYCGV_BOARD " + 
+		String sql = "SELECT BID, BTITLE, BCONTENT, BHITS, ID, BDATE, BFILE, BSFILE FROM MYCGV_BOARD " + 
 				" WHERE BID = ?";
 		getPreparedStatement(sql);
 		
@@ -106,6 +106,8 @@ public class BoardDao extends DBConn{
 				boardVo.setBhits(rs.getInt(4));
 				boardVo.setId(rs.getString(5));
 				boardVo.setBdate(rs.getString(6));
+				boardVo.setBfile(rs.getString(7));
+				boardVo.setBsfile(rs.getString(8));
 			}			
 			
 		} catch (Exception e) {
@@ -189,14 +191,16 @@ public class BoardDao extends DBConn{
 	 */
 	public int insert(BoardVo boardVo) {
 		int result = 0;
-		String sql = "insert into mycgv_board(bid,btitle,bcontent,bhits,id,bdate) "
-				+ " values('b_'||LTRIM(to_char(sequ_mycgv_board.nextval,'0000')),?,?,0,?,sysdate)";
+		String sql = "insert into mycgv_board(bid,btitle,bcontent,bhits,id,bdate,bfile,bsfile) "
+				+ " values('b_'||LTRIM(to_char(sequ_mycgv_board.nextval,'0000')),?,?,0,?,sysdate,?,?)";
 		getPreparedStatement(sql);
 		
 		try {
 			pstmt.setString(1, boardVo.getBtitle());
 			pstmt.setString(2, boardVo.getBcontent());
 			pstmt.setString(3, boardVo.getId());
+			pstmt.setString(4, boardVo.getBfile());
+			pstmt.setString(5, boardVo.getBsfile());
 			
 			result = pstmt.executeUpdate();			
 			
