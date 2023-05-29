@@ -34,7 +34,6 @@ public class JoinController {
 	public ModelAndView join_proc(MemberVo memberVo) {
 		ModelAndView model = new ModelAndView();
 		
-		MemberServiceImpl memberService = new MemberServiceImpl();
 		int result = memberService.getJoinResult(memberVo);
 		if(result == 1) {
 			model.addObject("join_result", "ok");
