@@ -34,10 +34,6 @@ public class JoinController {
 	public ModelAndView join_proc(MemberVo memberVo) {
 		ModelAndView model = new ModelAndView();
 		
-		/*
-		 * MemberDao memberDao = new MemberDao(); int result =
-		 * memberDao.insert(memberVo);
-		 */
 		MemberServiceImpl memberService = new MemberServiceImpl();
 		int result = memberService.getJoinResult(memberVo);
 		if(result == 1) {

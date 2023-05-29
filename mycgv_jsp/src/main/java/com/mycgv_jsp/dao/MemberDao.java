@@ -2,9 +2,20 @@ package com.mycgv_jsp.dao;
 
 import java.util.ArrayList;
 
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.mycgv_jsp.vo.MemberVo;
 
+@Repository
 public class MemberDao extends DBConn{
+	
+	@Autowired
+	private SqlSessionTemplate sqlSession;
+	
+	
 	/**
 	 *  전체 로우 카운트 - 페이징 처리
 	 */
@@ -95,24 +106,21 @@ public class MemberDao extends DBConn{
 	 * loginCheck - 로그인 체크
 	 */
 	public int loginCheck(MemberVo memberVo) {
-		int result = 0;
-		String sql = "select count(*) from mycgv_member where id=? and pass=?";
-		getPreparedStatement(sql);
+		return sqlSession.selectOne("mapper.member.login", memberVo);
+		/*
+		 * int result = 0; String sql =
+		 * "select count(*) from mycgv_member where id=? and pass=?";
+		 * getPreparedStatement(sql);
+		 * 
+		 * try { pstmt.setString(1, memberVo.getId()); pstmt.setString(2,
+		 * memberVo.getPass());
+		 * 
+		 * rs = pstmt.executeQuery(); while(rs.next()) { result = rs.getInt(1); }
+		 * 
+		 * } catch (Exception e) { e.printStackTrace(); }
+		 
 		
-		try {
-			pstmt.setString(1, memberVo.getId());
-			pstmt.setString(2, memberVo.getPass());
-			
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				result = rs.getInt(1);
-			}			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return result;
+		return result;*/
 	}
 	
 	
@@ -144,7 +152,8 @@ public class MemberDao extends DBConn{
 	 * insert - 회원가입
 	 */
 	public int insert(MemberVo memberVo) {
-		int result = 0;
+		return sqlSession.insert("mapper.member.join", memberVo);
+		/*int result = 0;
 		String sql = "insert into mycgv_member"
 				+ " (id,pass,name,gender,email,addr,tel,pnumber,hobbylist,intro,mdate,grade) "
 				+ " values(?,?,?,?,?,?,?,?,?,?,sysdate,'GOLD')";
@@ -168,7 +177,7 @@ public class MemberDao extends DBConn{
 			e.printStackTrace();
 		}	
 		
-		return result;
+		return result;*/
 	}
 }
 

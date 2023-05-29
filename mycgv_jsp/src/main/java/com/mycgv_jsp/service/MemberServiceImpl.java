@@ -2,6 +2,7 @@ package com.mycgv_jsp.service;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mycgv_jsp.dao.MemberDao;
@@ -9,6 +10,11 @@ import com.mycgv_jsp.vo.MemberVo;
 
 @Service
 public class MemberServiceImpl implements MemberService{
+	
+	@Autowired
+	private MemberDao memberDao;
+	
+	
 	@Override
 	public int getTotalRowCount() {
 		MemberDao memberDao = new MemberDao();
@@ -21,8 +27,7 @@ public class MemberServiceImpl implements MemberService{
 	}
 	@Override
 	public int getJoinResult(MemberVo memberVo) {
-		MemberDao memberDao = new MemberDao();
-		return memberDao.insert(memberVo);
+			  return memberDao.insert(memberVo);
 	}
 	@Override
 	 public String getIdCheckResult(String id) {
@@ -32,7 +37,6 @@ public class MemberServiceImpl implements MemberService{
 	}
 	@Override
 	 public int getLoginResult(MemberVo memberVo) {
-			MemberDao memberDao = new MemberDao();
 			return memberDao.loginCheck(memberVo);
 	}
 }
