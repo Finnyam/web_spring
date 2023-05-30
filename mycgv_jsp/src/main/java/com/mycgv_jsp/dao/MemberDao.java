@@ -1,7 +1,9 @@
 package com.mycgv_jsp.dao;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,15 @@ public class MemberDao extends DBConn{
 	 * select - 회원리스트: 페이징
 	 */
 	public ArrayList<MemberVo> select(int startCount, int endCount) {
+		Map<String, Integer> param = new HashMap<String, Integer>();
+		param.put("start", startCount);
+		param.put("end", endCount);
+		
+		List<MemberVo> list = sqlSession.selectList("mapper.member.list", param);
+		
+		return (ArrayList<MemberVo>)list;
+		
+		/*
 		ArrayList<MemberVo> list = new ArrayList<MemberVo>();
 		String sql = "SELECT RNO,ID,NAME,MDATE,GRADE "
 				+ " FROM (select rownum rno, id, name, to_char(mdate,'yyyy-mm-dd') mdate, grade " + 
@@ -68,7 +79,7 @@ public class MemberDao extends DBConn{
 			e.printStackTrace();
 		}
 		
-		return list;
+		return list;*/
 	}
 	
 	/**

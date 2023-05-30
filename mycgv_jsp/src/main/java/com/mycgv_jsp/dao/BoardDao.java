@@ -1,10 +1,22 @@
 package com.mycgv_jsp.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.mycgv_jsp.vo.BoardVo;
 
+@Repository
 public class BoardDao extends DBConn{
+	
+	@Autowired
+	private SqlSessionTemplate sqlSession;
+	
 	/**
 	 *  전체 로우 카운트 - 페이징 처리
 	 */
@@ -30,7 +42,8 @@ public class BoardDao extends DBConn{
 	 * updateHits - 조회수 증가
 	 */
 	public void updateHits(String bid) {
-		String sql = "update mycgv_board set bhits = bhits+1 where bid=?";
+		sqlSession.update("mapper.board.updateHits", bid);
+		/*String sql = "update mycgv_board set bhits = bhits+1 where bid=?";
 		getPreparedStatement(sql);
 		
 		try {
@@ -39,14 +52,15 @@ public class BoardDao extends DBConn{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	/**
 	 * delete - 게시글 삭제
 	 */
 	public int delete(String bid) {
-		int result = 0;
+		return sqlSession.delete("mapper.board.delete", bid);
+		/*int result = 0;
 		String sql = "delete from mycgv_board where bid=?";
 		getPreparedStatement(sql);
 		
@@ -58,7 +72,7 @@ public class BoardDao extends DBConn{
 			e.printStackTrace();
 		}
 		
-		return result;
+		return result;*/
 	}
 
 	
@@ -66,7 +80,8 @@ public class BoardDao extends DBConn{
 	 * update - 게시글 수정
 	 */
 	public int update(BoardVo boardVo) {
-		int result = 0;
+		return sqlSession.update("mapper.board.update", boardVo);
+		/*int result = 0;
 		String sql = "update mycgv_board set btitle=?, bcontent=? where bid=?";
 		getPreparedStatement(sql);
 		
@@ -81,7 +96,7 @@ public class BoardDao extends DBConn{
 			e.printStackTrace();
 		}
 		
-		return result;
+		return result;*/
 	}
 	
 	
@@ -90,7 +105,8 @@ public class BoardDao extends DBConn{
 	 * select(bid) - 게시글 상세 보기
 	 */
 	public BoardVo select(String bid){
-		BoardVo boardVo = new BoardVo();
+		return sqlSession.selectOne("mapper.board.content", bid);
+		/*BoardVo boardVo = new BoardVo();
 		String sql = "SELECT BID, BTITLE, BCONTENT, BHITS, ID, BDATE, BFILE, BSFILE FROM MYCGV_BOARD " + 
 				" WHERE BID = ?";
 		getPreparedStatement(sql);
@@ -114,12 +130,19 @@ public class BoardDao extends DBConn{
 			e.printStackTrace();
 		}
 		
-		return boardVo;
+		return boardVo;*/
 	}
 	
 	//페이징 처리 -startCount, endCount
 	public ArrayList<BoardVo> select(int startCount, int endCount){
-		ArrayList<BoardVo> list = new ArrayList<BoardVo>();
+		Map<String, Integer> param = new HashMap<String, Integer>();
+		param.put("start", startCount);
+		param.put("end", endCount);
+		
+		List<BoardVo> list = sqlSession.selectList("mapper.board.list", param);
+		
+		return (ArrayList<BoardVo>)list;
+		/*ArrayList<BoardVo> list = new ArrayList<BoardVo>();
 		String sql = "SELECT RNO,BID,BTITLE,BCONTENT,BHITS,ID,BDATE " +
 			    " FROM (SELECT ROWNUM RNO, BID, BTITLE, BCONTENT, BHITS, ID, to_char(BDATE,'yyyy-mm-dd') bdate " + 
 				"    FROM (SELECT BID, BTITLE,BCONTENT,BHITS, ID, BDATE FROM MYCGV_BOARD " + 
@@ -150,14 +173,16 @@ public class BoardDao extends DBConn{
 			e.printStackTrace();
 		}
 		
-		return list;
+		return list;*/
 	}
 	
 	/**
 	 * select - 게시글 전체 리스트
 	 */
 	public ArrayList<BoardVo> select(){
-		ArrayList<BoardVo> list = new ArrayList<BoardVo>();
+		List<BoardVo> list = sqlSession.selectList("mapper.board.list2");
+		return (ArrayList<BoardVo>)list;
+		/*ArrayList<BoardVo> list = new ArrayList<BoardVo>();
 		String sql = "SELECT ROWNUM RNO, BID, BTITLE, BCONTENT, BHITS, ID, to_char(BDATE,'yyyy-mm-dd') bdate " + 
 				" FROM (SELECT BID, BTITLE,BCONTENT,BHITS, ID, BDATE FROM MYCGV_BOARD " + 
 				"          ORDER BY BDATE DESC)";
@@ -183,14 +208,16 @@ public class BoardDao extends DBConn{
 			e.printStackTrace();
 		}
 		
-		return list;
+		return list;*/
 	}
 	
 	/**
 	 * insert - 게시글 등록
 	 */
 	public int insert(BoardVo boardVo) {
-		int result = 0;
+		return sqlSession.insert("mapper.board.insert", boardVo);
+		
+		/*int result = 0;
 		String sql = "insert into mycgv_board(bid,btitle,bcontent,bhits,id,bdate,bfile,bsfile) "
 				+ " values('b_'||LTRIM(to_char(sequ_mycgv_board.nextval,'0000')),?,?,0,?,sysdate,?,?)";
 		getPreparedStatement(sql);
@@ -208,6 +235,6 @@ public class BoardDao extends DBConn{
 			e.printStackTrace();
 		}
 		
-		return result;
+		return result;*/
 	}
 }

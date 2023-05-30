@@ -31,7 +31,6 @@
 	<beans:bean id="pageService" class="com.mycgv_jsp.service.PageServiceImpl"></beans:bean>
 	
 	
-	<beans:bean id="memberDao" class="com.mycgv_jsp.dao.MemberDao"></beans:bean>
 	
 	
 	
