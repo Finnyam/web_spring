@@ -2,12 +2,18 @@ package com.mycgv_jsp.service;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.mycgv_jsp.dao.NoticeDao;
 import com.mycgv_jsp.vo.NoticeVo;
 
+@Service
 public class NoticeServiceImpl implements NoticeService{
 	
-	NoticeDao noticeDao = new NoticeDao();
+	
+	@Autowired
+	private NoticeDao noticeDao;
 	
 	@Override
 	public int getInsert(NoticeVo noticeVo) {
@@ -18,23 +24,23 @@ public class NoticeServiceImpl implements NoticeService{
 		return noticeDao.select(startCount, endCount);
 	}
 	@Override
-	public NoticeVo getSelect(String bid) {
-		return noticeDao.select(bid);
+	public NoticeVo getSelect(String nid) {
+		return noticeDao.select(nid);
 	}
 	@Override
 	 public int getUpdate(NoticeVo noticeVo) {
 		return noticeDao.update(noticeVo);
 	}
 	@Override
-	 public int getDelete(String bid) {
-		return noticeDao.delete(bid);
+	 public int getDelete(String nid) {
+		return noticeDao.delete(nid);
 	}
 	@Override
 	 public int getTotalRowCount() {
 		return noticeDao.totalRowCount();
 	}
 	@Override
-	 public void getUpdateHits(String bid) {
-		noticeDao.updateHits(bid);
+	 public void getUpdateHits(String nid) {
+		noticeDao.updateHits(nid);
 	}
 }

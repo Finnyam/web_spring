@@ -8,9 +8,9 @@ import com.mycgv_jsp.vo.NoticeVo;
 public interface NoticeService {
 	public int getInsert(NoticeVo noticeVo);
 	ArrayList<NoticeVo> getSelect(int startCount, int endCount);
-	NoticeVo getSelect(String bid);
+	NoticeVo getSelect(String nid);
 	int getUpdate(NoticeVo noticeVo);
-	int getDelete(String bid);
+	int getDelete(String nid);
 	int getTotalRowCount();
-	void getUpdateHits(String bid);
+	void getUpdateHits(String nid);
 }

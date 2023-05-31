@@ -65,6 +65,8 @@ public class AdminController {
 	@RequestMapping(value="/admin_notice_delete.do", method=RequestMethod.GET)
 	public ModelAndView admin_notice_delete(String nid) {
 		ModelAndView model = new ModelAndView();
+		NoticeVo noticeVo = noticeService.getSelect(nid);
+		
 		model.addObject("nid", nid);
 		model.setViewName("/admin/notice/admin_notice_delete");
 		
@@ -114,8 +116,7 @@ public class AdminController {
 	@RequestMapping(value="/admin_notice_write_proc.do", method=RequestMethod.POST)
 	public String admin_notice_write_proc(NoticeVo noticeVo) {	
 		String viewName = "";
-		NoticeDao noticeDao = new NoticeDao();
-		int result = noticeDao.insert(noticeVo);
+		int result = noticeService.getInsert(noticeVo);
 		if(result == 1) {
 			viewName = "redirect:/admin_notice_list.do";
 		}		
@@ -137,7 +138,7 @@ public class AdminController {
 	public ModelAndView admin_notice_list(String page) {
 		ModelAndView model = new ModelAndView();
 		Map<String, Integer> param = pageService.getPageResult(page, "notice");
-		ArrayList<MemberVo> list = memberService.getList(param.get("startCount"), param.get("endCount"));
+		ArrayList<NoticeVo> list = noticeService.getSelect(param.get("startCount"), param.get("endCount"));
 		
 
 				model.addObject("list", list);
