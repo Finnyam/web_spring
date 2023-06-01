@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.mycgv_jsp.dao.NoticeDao;
 import com.mycgv_jsp.vo.NoticeVo;
 
-@Service
+@Service("noticeService")
 public class NoticeServiceImpl implements NoticeService{
 	
 	
@@ -34,10 +34,6 @@ public class NoticeServiceImpl implements NoticeService{
 	@Override
 	 public int getDelete(String nid) {
 		return noticeDao.delete(nid);
-	}
-	@Override
-	 public int getTotalRowCount() {
-		return noticeDao.totalRowCount();
 	}
 	@Override
 	 public void getUpdateHits(String nid) {

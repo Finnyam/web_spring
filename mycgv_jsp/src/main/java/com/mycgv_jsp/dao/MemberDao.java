@@ -12,32 +12,12 @@ import org.springframework.stereotype.Repository;
 import com.mycgv_jsp.vo.MemberVo;
 
 @Repository
-public class MemberDao extends DBConn{
+public class MemberDao implements MycgvDao{
 	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
 	
-	/**
-	 *  전체 로우 카운트 - 페이징 처리
-	 */
-	public int totalRowCount() {
-			int count = 0;
-			String sql = "select count(*) from mycgv_member";
-			getPreparedStatement(sql);
-			
-			try {
-				rs = pstmt.executeQuery();
-				while(rs.next()) {				
-					count = rs.getInt(1);
-				}			
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			return count;		
-		}
 	
 	/**
 	 * select - 회원리스트: 페이징
@@ -82,34 +62,7 @@ public class MemberDao extends DBConn{
 		return list;*/
 	}
 	
-	/**
-	 * select - 회원리스트
-	 */
-	public ArrayList<MemberVo> select() {
-		ArrayList<MemberVo> list = new ArrayList<MemberVo>();
-		String sql = "select rownum rno, id, name, to_char(mdate,'yyyy-mm-dd') mdate, grade " + 
-				" from (select id, name, mdate, grade from mycgv_member " + 
-				"        order by mdate desc)";
-		getPreparedStatement(sql);
-		
-		try {						
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				MemberVo memberVo = new MemberVo();
-				memberVo.setRno(rs.getInt(1));
-				memberVo.setId(rs.getString(2));
-				memberVo.setName(rs.getString(3));
-				memberVo.setMdate(rs.getString(4));
-				memberVo.setGrade(rs.getString(5));
-				list.add(memberVo);   //콘솔창에러X, 화면출력X
-			}			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
+	
 	
 	
 	
@@ -140,6 +93,8 @@ public class MemberDao extends DBConn{
 	 * idCheck - 아이디 중복체크
 	 */
 	public int idCheck(String id) {
+		return sqlSession.selectOne("mapper.member.idcheck", id);
+		/*
 		int result = 0;
 		String sql = "SELECT COUNT(*) FROM MYCGV_MEMBER WHERE ID=?";
 		getPreparedStatement(sql);
@@ -156,14 +111,15 @@ public class MemberDao extends DBConn{
 			e.printStackTrace();
 		}
 		
-		return result;
+		return result;*/
 	}
 	
 	/**
 	 * insert - 회원가입
 	 */
-	public int insert(MemberVo memberVo) {
-		return sqlSession.insert("mapper.member.join", memberVo);
+	@Override
+	public int insert(Object memberVo) {
+		return sqlSession.insert("mapper.member.join", (MemberVo)memberVo);
 		/*int result = 0;
 		String sql = "insert into mycgv_member"
 				+ " (id,pass,name,gender,email,addr,tel,pnumber,hobbylist,intro,mdate,grade) "

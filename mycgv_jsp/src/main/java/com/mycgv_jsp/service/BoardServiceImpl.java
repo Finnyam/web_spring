@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.mycgv_jsp.dao.BoardDao;
 import com.mycgv_jsp.vo.BoardVo;
 
-@Service
+@Service("boardService")
 public class BoardServiceImpl implements BoardService{
 	
 	//private BoardDao boardDao = new BoardDao();
@@ -39,9 +39,5 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public int getDelete(String bid) {
 		return boardDao.delete(bid);
-	}
-	@Override
-	public int getTotalRowCount() {
-		return boardDao.totalRowCount();
 	}
 }
