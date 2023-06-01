@@ -12,32 +12,11 @@ import org.springframework.stereotype.Repository;
 import com.mycgv_jsp.vo.NoticeVo;
 
 @Repository
-public class NoticeDao extends DBConn {
+public class NoticeDao implements MycgvDao{
 	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
-	
-	/**
-	 *  전체 로우 카운트 - 페이징 처리
-	 */
-	public int totalRowCount() {
-			int count = 0;
-			String sql = "select count(*) from mycgv_notice";
-			getPreparedStatement(sql);
-			
-			try {
-				rs = pstmt.executeQuery();
-				while(rs.next()) {				
-					count = rs.getInt(1);
-				}			
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			return count;		
-		}	
 	
 	/**
 	 * updateHits - 공지사항 조회수 업데이트 
@@ -201,8 +180,9 @@ public class NoticeDao extends DBConn {
 	/**
 	 * insert - 공지사항 등록
 	 */
-	public int insert(NoticeVo noticeVo) {
-		return sqlSession.insert("mapper.notice.insert", noticeVo);
+	@Override
+	public int insert(Object noticeVo) {
+		return sqlSession.insert("mapper.notice.insert", (NoticeVo)noticeVo);
 		/*
 		int result = 0;
 		String sql = "insert into mycgv_notice(nid,ntitle,ncontent,nhits,ndate) "

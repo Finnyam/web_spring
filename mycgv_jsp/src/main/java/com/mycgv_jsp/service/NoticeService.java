@@ -11,6 +11,5 @@ public interface NoticeService {
 	NoticeVo getSelect(String nid);
 	int getUpdate(NoticeVo noticeVo);
 	int getDelete(String nid);
-	int getTotalRowCount();
 	void getUpdateHits(String nid);
 }

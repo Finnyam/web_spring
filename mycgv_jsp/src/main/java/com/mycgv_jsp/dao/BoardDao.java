@@ -12,31 +12,12 @@ import org.springframework.stereotype.Repository;
 import com.mycgv_jsp.vo.BoardVo;
 
 @Repository
-public class BoardDao extends DBConn{
+public class BoardDao implements MycgvDao{
 	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
-	/**
-	 *  전체 로우 카운트 - 페이징 처리
-	 */
-	public int totalRowCount() {
-			int count = 0;
-			String sql = "select count(*) from mycgv_board";
-			getPreparedStatement(sql);
-			
-			try {
-				rs = pstmt.executeQuery();
-				while(rs.next()) {				
-					count = rs.getInt(1);
-				}			
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			return count;		
-		}	
+	
 	
 	/**
 	 * updateHits - 조회수 증가
@@ -132,8 +113,10 @@ public class BoardDao extends DBConn{
 		
 		return boardVo;*/
 	}
-	
-	//페이징 처리 -startCount, endCount
+
+	/**
+	 * select - 게시글 전체 리스트  페이징 처리 -startCount, endCount
+	 */
 	public ArrayList<BoardVo> select(int startCount, int endCount){
 		Map<String, Integer> param = new HashMap<String, Integer>();
 		param.put("start", startCount);
@@ -212,10 +195,17 @@ public class BoardDao extends DBConn{
 	}
 	
 	/**
-	 * insert - 게시글 등록
+	 * insert - 게시글 등록(상속)
 	 */
-	public int insert(BoardVo boardVo) {
+	@Override
+	public int insert(Object boardVo) {
+		return sqlSession.insert("mapper.board.insert", (BoardVo)boardVo);
+	}
+	
+	/*public int insert(BoardVo boardVo) {
 		return sqlSession.insert("mapper.board.insert", boardVo);
+		}
+		*/
 		
 		/*int result = 0;
 		String sql = "insert into mycgv_board(bid,btitle,bcontent,bhits,id,bdate,bfile,bsfile) "
@@ -236,5 +226,5 @@ public class BoardDao extends DBConn{
 		}
 		
 		return result;*/
-	}
+	
 }
