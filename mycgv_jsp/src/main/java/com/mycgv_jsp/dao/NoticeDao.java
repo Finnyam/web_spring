@@ -109,14 +109,14 @@ public class NoticeDao implements MycgvDao{
 	/**
 	 * select - 공지사항 전체 리스트(페이징 처리)
 	 */
-	public ArrayList<NoticeVo> select(int startCount, int endCount){
+	public List<Object> select(int startCount, int endCount){
 		Map<String, Integer> param = new HashMap<String, Integer>();
 		param.put("start", startCount);
 		param.put("end", endCount);
 		
-		List<NoticeVo> list = sqlSession.selectList("mapper.notice.list", param);
+		//List<NoticeVo> list = sqlSession.selectList("mapper.notice.list", param);
 		
-		return (ArrayList<NoticeVo>)list;
+		return sqlSession.selectList("mapper.notice.list", param);
 		/*
 		ArrayList<NoticeVo> list = new ArrayList<NoticeVo>();
 		String sql =" SELECT RNO,NID,NTITLE,NHITS,NDATE " + 

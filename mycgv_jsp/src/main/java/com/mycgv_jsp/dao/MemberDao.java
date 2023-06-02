@@ -22,14 +22,14 @@ public class MemberDao implements MycgvDao{
 	/**
 	 * select - 회원리스트: 페이징
 	 */
-	public ArrayList<MemberVo> select(int startCount, int endCount) {
+	public List<Object> select(int startCount, int endCount) {
 		Map<String, Integer> param = new HashMap<String, Integer>();
 		param.put("start", startCount);
 		param.put("end", endCount);
 		
-		List<MemberVo> list = sqlSession.selectList("mapper.member.list", param);
+		//List<MemberVo> list = sqlSession.selectList("mapper.member.list", param);
 		
-		return (ArrayList<MemberVo>)list;
+		return sqlSession.selectList("mapper.member.list", param);
 		
 		/*
 		ArrayList<MemberVo> list = new ArrayList<MemberVo>();
