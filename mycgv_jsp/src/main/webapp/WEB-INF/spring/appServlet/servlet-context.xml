@@ -51,6 +51,12 @@
 			<mapping path="/mypage.do"/>
 			<beans:ref bean="sessionAuthInterceptor"/>
 		</interceptor>
+		
+		<interceptor>
+			<mapping path="/admin*"/>
+			<beans:ref bean="sessionAuthInterceptor"></beans:ref>
+		</interceptor>
+		
 	</interceptors>
 	
 	
