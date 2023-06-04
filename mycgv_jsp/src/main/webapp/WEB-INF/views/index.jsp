@@ -16,7 +16,7 @@
 		if(logout_result == 'ok'){
 			alert("로그아웃 완료");
 		}
-	
+	 
 	</script>
 </head>
 <body>
