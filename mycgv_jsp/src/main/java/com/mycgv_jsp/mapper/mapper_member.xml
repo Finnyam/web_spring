@@ -24,8 +24,9 @@
 		values(#{id},#{pass},#{name},#{gender},#{email},#{addr},#{tel},#{pnumber},#{hobbyList},#{intro},sysdate,'GOLD')
 	</insert>
 	
-	<select id="login" parameterType="com.mycgv_jsp.vo.MemberVo" resultType="int"> <!-- mapper.member.login -->
-		select count(*) from mycgv_member where id=#{id} and pass=#{pass}
+	<select id="login" parameterType="com.mycgv_jsp.vo.MemberVo" resultType="com.mycgv_jsp.vo.SessionVo"> <!-- mapper.member.login -->
+		SELECT COUNT(*) LOGINRESULT, NAME,ID FROM MYCGV_MEMBER WHERE ID=#{id} AND PASS=#{pass}
+			GROUP BY NAME,ID
 	</select>
 
 
