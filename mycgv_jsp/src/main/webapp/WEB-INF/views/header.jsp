@@ -14,7 +14,7 @@
 		<div class="header_menu">
 			<nav class="nav1">
 				<c:choose>
-				<c:when test="${sessionScope.sid == null}">
+				<c:when test="${sessionScope.svo == null}">
 				<ul>					
 					<li><a href="http://localhost:9000/mycgv_jsp/login.do">로그인</a></li>
 					<li><a href="http://localhost:9000/mycgv_jsp/join.do">회원가입</a></li>
@@ -28,7 +28,7 @@
 				</c:when>
 				<c:otherwise>
 				<ul>
-					<li>${sessionScope.sid}님!! 반갑습니다~</li>
+					<li>${sessionScope.svo.name}님!! 반갑습니다~</li>
 					<li><a href="http://localhost:9000/mycgv_jsp/logout.do" >로그아웃</a></li> 
 					<!-- <li><a href="http://localhost:9000/mycgv_jsp/join/join.jsp" target="_parent">회원가입</a></li> -->
 					<li><a href="http://localhost:9000/mycgv_jsp/mypage.do">마이페이지</a></li>
@@ -37,7 +37,7 @@
 					<li><a href="http://localhost:9000/mycgv_jsp/notice_list.do">공지사항</a></li>
 					<li><a href="http://localhost:9000/mycgv_jsp/board_list.do">게시판</a></li>					
 					<li><a href="http://localhost:9000/mycgv_jsp/board_list_json.do">게시판(JSON)</a></li>					
-					<c:if test="${sessionScope.sid == 'admin'}">
+					<c:if test="${sessionScope.svo.id == 'admin'}">
 					<li><a href="http://localhost:9000/mycgv_jsp/admin_index.do">ADMIN</a></li>					
 					</c:if>
 				</ul>
