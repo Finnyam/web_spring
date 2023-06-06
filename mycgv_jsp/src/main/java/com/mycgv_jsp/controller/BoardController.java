@@ -227,7 +227,7 @@ public class BoardController {
 			jlist.addProperty("page", param.get("reqPage"));
 			
 			return new Gson().toJson(jlist);
-		
+		 
 		}
 }
 
