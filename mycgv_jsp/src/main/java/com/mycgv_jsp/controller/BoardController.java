@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mycgv_jsp.service.BoardService;
+import com.mycgv_jsp.service.FileServiceImpl;
 import com.mycgv_jsp.service.PageServiceImpl;
 import com.mycgv_jsp.vo.BoardVo;
 
@@ -30,12 +31,15 @@ public class BoardController {
 	@Autowired
 	private PageServiceImpl pageService;
 	
+	@Autowired
+	private FileServiceImpl fileService;
+	
 	/**
 	 * board_delete_proc.do - 게시글 삭제 처리
 	 * 	 
 	 * */
 	@RequestMapping(value="/board_delete_proc.do", method=RequestMethod.POST)
-	public String board_delete_proc(String bid) {
+	public String board_delete_proc(String bid, String bsfile, HttpServletRequest request) throws Exception {
 		String viewName = "";
 		int result = boardService.getDelete(bid);
 		if(result == 1){
@@ -52,9 +56,10 @@ public class BoardController {
 	 * 	 
 	 * */
 	@RequestMapping(value="/board_delete.do", method=RequestMethod.GET)
-	public ModelAndView board_delete(String bid) {
+	public ModelAndView board_delete(String bid, String bsfile) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("bid", bid);
+		model.addObject("bsfile", bsfile);
 		model.setViewName("/board/board_delete");
 		return model;
 	}
@@ -64,10 +69,20 @@ public class BoardController {
 	 * board_update_proc.do - 게시글 수정 처리	 * 
 	 * 	 */
 	@RequestMapping(value="/board_update_proc.do", method=RequestMethod.POST)
-	public String board_update_proc(BoardVo boardVo) {
+	public String board_update_proc(BoardVo boardVo,HttpServletRequest request) 
+													throws Exception{
 		String viewName = "";
-		int result = boardService.getUpdate(boardVo);
+		
+		String oldFileName = boardVo.getBsfile(); //새로운 파일 업데이트 시 기존파일 삭제
+
+		int result = boardService.getUpdate(fileService.fileCheck(boardVo));
 		if(result == 1){
+			if(boardVo.getBfile() != null && boardVo.getBfile().equals("")) {
+				fileService.fileSave(boardVo, request); //새로운 파일 저장
+				//기존 파일 삭제
+				fileService.fileDelete(boardVo, request, oldFileName); //새로운 파일 저장
+				
+			}
 			viewName = "redirect:/board_list.do";
 		}else {
 			//에러페이지 호출
@@ -100,38 +115,12 @@ public class BoardController {
 	                                     throws Exception{
 		String viewName = "";
 		
-		//파일의 저장위치
-		String root_path = request.getSession().getServletContext().getRealPath("/");
-		String attach_path = "\\resources\\upload\\";
-		
-		//bfile, bsfile 파일명 생성
-		if(boardVo.getFile1().getOriginalFilename() != null
-				&& !boardVo.getFile1().getOriginalFilename().equals("")) { //파일이 존재하면
-			//BSFILE 파일 중복 처리
-			UUID uuid = UUID.randomUUID();
-			String bfile =  boardVo.getFile1().getOriginalFilename();
-			String bsfile = uuid + "_" + bfile; 
-			
-			System.out.println(root_path + attach_path);
-			System.out.println("bfile-->"+ bfile);
-			System.out.println("bsfile-->"+ bsfile);
-			
-			boardVo.setBfile(bfile);
-			boardVo.setBsfile(bsfile);
-		}else {
-			System.out.println("파일 없음");
-		}
-		
-		
-		
-		int result = boardService.getInsert(boardVo);
+		int result = boardService.getInsert(fileService.fileCheck(boardVo));
 		if(result == 1){
-			//response.sendRedirect("http://localhost:9000/mycgv_jsp/board/board_list.jsp");
-//			viewName = "/board/board_list";
-			
-			//파일이 존재하면 서버에 저장
-			File saveFile = new File(root_path + attach_path+boardVo.getBsfile());
-			boardVo.getFile1().transferTo(saveFile);
+		
+			if(boardVo.getBfile() != null && boardVo.getBfile().equals("")) {
+				fileService.fileSave(boardVo, request);
+			}
 			
 			viewName = "redirect:/board_list.do";
 		}else {
@@ -227,7 +216,7 @@ public class BoardController {
 			jlist.addProperty("page", param.get("reqPage"));
 			
 			return new Gson().toJson(jlist);
-		
+		 
 		}
 }
 

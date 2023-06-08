@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mycgv_jsp.dao.MemberDao;
 import com.mycgv_jsp.vo.MemberVo;
+import com.mycgv_jsp.vo.SessionVo;
 
 @Service("memberService")
 public class MemberServiceImpl implements MemberService{
@@ -35,7 +36,7 @@ public class MemberServiceImpl implements MemberService{
 		return String.valueOf(result);
 	}
 	@Override
-	 public int getLoginResult(MemberVo memberVo) {
+	 public SessionVo getLoginResult(MemberVo memberVo) {
 			return memberDao.loginCheck(memberVo);
 	}
 }

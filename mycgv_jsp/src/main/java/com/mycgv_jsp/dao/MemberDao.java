@@ -1,6 +1,5 @@
 package com.mycgv_jsp.dao;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.mycgv_jsp.vo.MemberVo;
+import com.mycgv_jsp.vo.SessionVo;
 
 @Repository
 public class MemberDao implements MycgvDao{
@@ -69,7 +69,7 @@ public class MemberDao implements MycgvDao{
 	/**
 	 * loginCheck - 로그인 체크
 	 */
-	public int loginCheck(MemberVo memberVo) {
+	public SessionVo loginCheck(MemberVo memberVo) {
 		return sqlSession.selectOne("mapper.member.login", memberVo);
 		/*
 		 * int result = 0; String sql =
