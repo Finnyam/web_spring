@@ -25,9 +25,9 @@
 		</update>
 		
 		<insert id="insert" parameterType="com.mycgv_jsp.vo.NoticeVo">
-			insert into mycgv_notice(nid,ntitle,ncontent,nhits,ndate)
+			insert into mycgv_notice(nid,ntitle,ncontent,nhits,ndate,nfile1,nsfile1,nfile2,nsfile2)
 		 		values('n_'||ltrim(to_char(sequ_mycgv_notice.nextval,'0000')),
-		 			#{ntitle},#{ncontent},0,sysdate)
+		 			#{ntitle},#{ncontent},0,sysdate,#{nfile1},#{nsfile1},#{nfile2},#{nsfile2})
 		</insert>
 		
 		<select id="content" parameterType="java.lang.String" resultType="com.mycgv_jsp.vo.NoticeVo">
