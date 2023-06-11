@@ -3,13 +3,15 @@ package com.mycgv_jsp.controller;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mycgv_jsp.dao.NoticeDao;
+import com.mycgv_jsp.service.FileServiceImpl;
 import com.mycgv_jsp.service.MemberService;
 import com.mycgv_jsp.service.NoticeService;
 import com.mycgv_jsp.service.PageServiceImpl;
@@ -25,6 +27,8 @@ public class AdminController {
 	private NoticeService noticeService;
 	@Autowired
 	private PageServiceImpl pageService;
+	@Autowired
+	private FileServiceImpl fileService;
 	
 	/**
 	 * admin_member_list.do - 회원 전체 리스트
@@ -114,10 +118,16 @@ public class AdminController {
 	 * admin_notice_write_proc.do - 공지사항 등록 처리
 	 */
 	@RequestMapping(value="/admin_notice_write_proc.do", method=RequestMethod.POST)
-	public String admin_notice_write_proc(NoticeVo noticeVo) {	
+	public String admin_notice_write_proc(NoticeVo noticeVo, HttpServletRequest request) throws Exception {	
 		String viewName = "";
-		int result = noticeService.getInsert(noticeVo);
+		
+		//멀티파일 체크  - fileService.multiFileCheck()
+		int result = noticeService.getInsert(fileService.multiFileCheck(noticeVo));
 		if(result == 1) {
+			if(!noticeVo.getFiles()[0].getOriginalFilename().equals("")) {
+				fileService.multiFileSave(noticeVo,request);
+			}
+			
 			viewName = "redirect:/admin_notice_list.do";
 		}		
 		
