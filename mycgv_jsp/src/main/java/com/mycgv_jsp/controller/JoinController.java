@@ -1,4 +1,4 @@
-package com.mycgv_jsp.controller;
+ package com.mycgv_jsp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
